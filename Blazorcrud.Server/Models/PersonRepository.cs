@@ -39,6 +39,7 @@ namespace Blazorcrud.Server.Models
         {
             var result = await _appDbContext.People
                 .Include(p => p.Addresses)
+                .Include(p => p.Roles)
                 .FirstOrDefaultAsync(p => p.PersonId==personId);
             if (result != null)
             {

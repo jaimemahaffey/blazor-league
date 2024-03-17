@@ -1,5 +1,6 @@
 using Blazorcrud.Shared.Models;
 using Bogus;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blazorcrud.Server.Models
 {
@@ -19,12 +20,17 @@ namespace Blazorcrud.Server.Models
                         .RuleFor(a => a.State, f => f.Address.State())
                         .RuleFor(a => a.ZipCode, f => f.Address.ZipCode());
 
+                var roles = new Faker<Role>()
+                    .RuleFor(r => r.Name, f => f.Random.Word())
+                    .RuleFor(r => r.Description, f => string.Join("", f.Lorem.Sentences(3)));
+
                     // Create new people
                     var testPeople = new Faker<Blazorcrud.Shared.Models.Person>()
                         .RuleFor(p => p.FirstName, f => f.Name.FirstName())
                         .RuleFor(p => p.LastName, f => f.Name.LastName())
                         .RuleFor(p => p.Gender, f => f.PickRandom<Gender>())
                         .RuleFor(p => p.PhoneNumber, f => f.Phone.PhoneNumber())
+                        .RuleFor(p => p.Roles, f => roles.Generate(2).ToList())
                         .RuleFor(p => p.Addresses, f => testAddresses.Generate(2).ToList());
                         
                     var people = testPeople.Generate(25);
